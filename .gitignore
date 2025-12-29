@@ -1,0 +1,4 @@
+node_modules/
+skip/
+uploads/
+package-lock.json

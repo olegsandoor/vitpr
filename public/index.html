@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru" class="is-loading">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <button id="backToListBtn" class="back-button is-invisible" title="К списку заявок">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+            </button>
+            <h1>Система заявок</h1>
+            <div class="user-profile">
+                <span id="userRole" class="user-role"></span>
+                <span id="userName">Загрузка...</span>
+                <button id="logoutButton" title="Выход">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+        <div id="listView">
+            <main>
+                <div class="main-controls">
+                    <h2 id="listTitle">Ваши заявки</h2>
+                    <div class="filter-controls">
+                        <div class="search-bar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                            <input type="text" id="searchInput" placeholder="Поиск по номеру или названию...">
+                        </div>
+                        <div class="filter-wrapper">
+                            <button class="btn-filter" id="openFilterBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.044 1.887l-2.25 1.125a2.25 2.25 0 01-2.318-1.245v-2.129a2.25 2.25 0 00-.659-1.591L2.625 6.321a2.25 2.25 0 01-.659-1.591V3.678c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+                                </svg>
+                                <span>Фильтры</span>
+                            </button>
+                            <div id="filterPanel" class="filter-panel">
+                                <div class="filter-section">
+                                    <h5>Статус</h5>
+                                    <div class="custom-multiselect" id="statusFilterContainer">
+                                        <div class="select-box" id="statusSelectBox">
+                                            <span>Все статусы</span>
+                                            <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                        </div>
+                                        <div class="multiselect-dropdown" id="statusDropdown">
+                                            <div class="multiselect-options" id="statusOptions"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="advancedFiltersContainer" style="display: none;">
+                                   <div class="filter-section">
+                                        <h5>Автор</h5>
+                                        <div class="custom-multiselect" id="authorFilterContainer">
+                                            <div class="select-box" id="authorSelectBox">
+                                                <span>Все авторы</span>
+                                                <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                            </div>
+                                            <div class="multiselect-dropdown" id="authorDropdown">
+                                                <input type="text" id="authorSearch" placeholder="Поиск автора...">
+                                                <div class="multiselect-options" id="authorOptions"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="filter-section">
+                                    <h5>Дата создания</h5>
+                                    <div class="date-range">
+                                        <input type="date" id="dateCreatedFrom" title="От">
+                                        <span>&ndash;</span>
+                                        <input type="date" id="dateCreatedTo" title="До">
+                                    </div>
+                                </div>
+                                <div class="filter-section">
+                                    <h5>Дата обновления</h5>
+                                    <div class="date-range">
+                                        <input type="date" id="dateUpdatedFrom" title="От">
+                                        <span>&ndash;</span>
+                                        <input type="date" id="dateUpdatedTo" title="До">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-main" id="openCreateModalBtn">Создать заявку</button>
+                </div>
+                <div id="active-filters-container" class="active-filters-container"></div>
+                <div id="listContainer">
+                    <p id="loadingMessage">Загрузка заявок...</p>
+                    <ul id="requestsList"></ul>
+                </div>
+                <div id="paginationContainer" class="pagination-container"></div>
+            </main>
+        </div>
+        <div id="detailView" class="hidden"></div>
+        <div id="adminView" class="hidden"></div>
+    </div>
+    <div class="modal-overlay" id="createRequestModal">
+        <div class="modal-content">
+            <form id="createRequestForm" novalidate>
+                <div class="input-group"><input type="text" id="req_title" name="title" required placeholder="Название мероприятия"><div class="form-error-message"></div></div>
+                <div class="input-group input-group-stretch"><textarea id="req_description" name="description" required placeholder="Подробное описание"></textarea><div class="form-error-message"></div></div>
+                <div class="input-group"><label for="req_date" class="date-label">Дата и время мероприятия</label><input type="datetime-local" id="req_date" name="planned_date" required><div class="date-error-message"></div></div>
+                <div class="file-upload-section">
+                    <div class="file-uploader" id="fileUploader">
+                        <ul id="file-list-container" class="file-list"></ul>
+                        <div class="uploader-footer">
+                            <label for="req_files" class="uploader-prompt">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <span>Перетащите файлы или <strong>нажмите для выбора</strong></span>
+                            </label>
+                            <button type="button" class="add-more-btn hidden" id="addMoreBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span>Добавить еще</span>
+                            </button>
+                        </div>
+                        <input type="file" id="req_files" name="documentFiles" multiple class="hidden">
+                    </div>
+                </div>
+                <div id="modalErrorMessage" class="server-message error"></div>
+                <div class="modal-actions"><button type="button" class="btn-secondary" id="closeCreateModalBtn">Отмена</button><button type="submit" class="btn-main">Отправить</button></div>
+            </form>
+        </div>
+    </div>
+    <script src="/dashboard.js" defer></script>
+</body>
+</html>
