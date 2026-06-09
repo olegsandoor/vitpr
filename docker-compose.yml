@@ -1,0 +1,105 @@
+# =============================================================================
+# docker-compose.yml — полное окружение VitEnergo одной командой.
+#
+# Запуск на любом устройстве с Docker:
+#     git clone <repo>
+#     cd vitenergo
+#     cp .env.example .env
+#     # Заполнить JWT_SECRET и REFRESH_TOKEN_SECRET (см. .env.example)
+#     docker compose up -d
+#
+# Что произойдёт при первом запуске:
+#     1. Поднимается MSSQL Linux (microsoft/mssql-server-2022)
+#     2. db-init контейнер дожидается mssql healthy
+#     3. db-init выполняет RESTORE из db/backup/VitEnergoProject.bak
+#        (схема + 38 миграций + demo-данные уже внутри snapshot'а)
+#     4. db-init создаёт роль VitEnergoUser для приложения
+#     5. db-init завершается (restart: "no" — больше не нужен)
+#     6. app стартует — БД готова, можно логиниться
+#        admin@vitebskenergo.by / X12345678!
+#
+# Повторные запуски: db-init проверяет существует ли БД, если да — skip.
+# =============================================================================
+
+services:
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: vitenergo-mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-VitEnergo123!}"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+      # Backup нужен в этом контейнере для физического чтения .bak файла
+      # (RESTORE выполняется server-side, файл должен быть на стороне mssql).
+      - ./db/backup:/backup:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MSSQL_SA_PASSWORD:-VitEnergo123!}\" -No -C -Q 'SELECT 1' || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+
+  db-init:
+    # Используем тот же image что и mssql — там встроен sqlcmd 18.
+    # Sidecar-style: запускается один раз, делает RESTORE, завершается.
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: vitenergo-db-init
+    depends_on:
+      mssql:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-VitEnergo123!}"
+      # Пароль app-логина: должен совпадать с DB_PASSWORD у сервиса app.
+      DB_PASSWORD: "${DB_PASSWORD:-VitEnergo123!}"
+    volumes:
+      - ./db/backup:/backup:ro
+      - ./scripts/db-restore.sh:/db-restore.sh:ro
+    entrypoint: ["/bin/bash", "/db-restore.sh"]
+    restart: "no"
+
+  app:
+    build: .
+    container_name: vitenergo-app
+    depends_on:
+      mssql:
+        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # App подключается под VitEnergoUser (создан в db-restore.sh после RESTORE),
+      # а не под sa — изоляция привилегий.
+      DB_USER:     "${DB_USER:-VitEnergoUser}"
+      DB_PASSWORD: "${DB_PASSWORD:-VitEnergo123!}"
+      DB_SERVER:   "mssql"
+      DB_DATABASE: "${DB_DATABASE:-VitEnergoProject}"
+      # mssql в контейнере отдаёт self-signed cert; под NODE_ENV=production его нужно явно доверять.
+      DB_TRUST_SERVER_CERT: "true"
+      JWT_SECRET:           "${JWT_SECRET}"
+      REFRESH_TOKEN_SECRET: "${REFRESH_TOKEN_SECRET}"
+      ENABLE_CLAMAV:        "${ENABLE_CLAMAV:-false}"
+      # Разрешённые origin'ы в дополнение к same-origin.
+      # Пустая строка = только same-origin (default).
+      ALLOWED_ORIGINS:      "${ALLOWED_ORIGINS:-}"
+    ports:
+      - "3000:3000"
+    volumes:
+      - app-uploads:/app/uploads
+      - app-logs:/app/logs
+    restart: unless-stopped
+
+volumes:
+  mssql-data:
+  app-uploads:
+  app-logs:

@@ -1,4 +1,38 @@
+# Зависимости
 node_modules/
-skip/
+
+# Рантайм-данные
 uploads/
-package-lock.json
+logs/
+*.log
+
+# Секреты
+.env
+.env.local
+
+# Локальное
+.claude/
+trash/
+skip/
+
+# Временные файлы
+*.bak.old
+*.tmp
+*.swp
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Черновики и приватные документы
+*.docx
+docs/diploma/
+
+# Миграции и cleanup-скрипты (БД восстанавливается из db/backup/*.bak)
+db/*.sql
+
+# Внутренние заметки
+HANDOFF.md
+CLAUDE.md

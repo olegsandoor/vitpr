@@ -10,31 +10,16 @@
 <body>
     <div class="auth-wrapper" id="authWrapper">
         <div class="brand-accent"></div>
-        <div classs="forms-viewport">
+        <div class="forms-viewport">
             <form class="auth-form active" id="loginForm">
-                <h1 tabindex="-1">Вход</h1>
-                <div class="input-group"><input type="email" id="l_login" name="login" required placeholder=" "><label for="l_login">Рабочая почта</label></div>
-                <div class="input-group"><input type="password" id="l_pass" name="password" required placeholder=" "><label for="l_pass">Пароль</label></div>
+                <h1 tabindex="-1">Вход в систему</h1>
+                <div class="input-group"><input type="email" id="l_login" name="login" autocomplete="username" required placeholder=" " autofocus><label for="l_login">Рабочая почта</label></div>
+                <div class="input-group"><input type="password" id="l_pass" name="password" autocomplete="current-password" required placeholder=" "><label for="l_pass">Пароль</label></div>
                 <div id="loginServerMessage" class="server-message"></div>
                 <button class="btn-main" type="submit">Войти</button>
-                <div class="toggle-area">Еще нет доступа?<button type="button" class="toggle-btn" id="switchToRegister">Подать заявку</button></div>
-            </form>
-            <form class="auth-form" id="registerForm">
-                <h1 tabindex="-1">Заявка на регистрацию</h1>
-                <div class="input-group"><input type="text" id="r_fio" name="fio" required placeholder=" "><label for="r_fio">ФИО</label><div class="error-message"></div></div>
-                <div class="input-group"><input type="email" id="r_email" name="email" required placeholder=" "><label for="r_email">Рабочая почта</label><div class="error-message"></div></div>
-                <div class="input-group">
-                    <div class="custom-select" id="customBranchSelect"><span class="custom-select-placeholder"></span><span class="custom-select-arrow"></span></div>
-                    <select id="r_branch" name="branch_id" required style="display:none;"></select>
-                    <div class="custom-options-container"></div>
-                    <label for="r_branch">Филиал</label>
-                    <div class="error-message"></div>
+                <div class="auth-help-row">
+                    <button type="button" class="forgot-link" id="forgotPassBtn">Забыли пароль?</button>
                 </div>
-                <div class="input-group"><input type="password" id="r_pass" name="password" required placeholder=" "><label for="r_pass">Пароль</label><div class="error-message"></div></div>
-                <div class="input-group"><input type="password" id="r_pass_confirm" name="password_confirm" required placeholder=" "><label for="r_pass_confirm">Повторите пароль</label><div class="error-message"></div></div>
-                <div id="registerServerMessage" class="server-message"></div>
-                <button class="btn-main" type="submit">Создать учетную запись</button>
-                <div class="toggle-area">Уже есть аккаунт?<button type="button" class="toggle-btn" id="switchToLogin">Войти</button></div>
             </form>
         </div>
     </div>

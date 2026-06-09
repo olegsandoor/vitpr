@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test:run": "node --test tests/",
+    "test": "start-server-and-test start http://localhost:3000/login test:run",
+    "lint": "eslint --no-ignore server.js config/constants.js config/swagger.js pdf/protocol.js public/dashboard.js public/login.js public/events.js public/404.js tests/smoke.test.js"
   },
   "keywords": [],
   "author": "",
@@ -13,18 +15,25 @@
   "dependencies": {
     "archiver": "^7.0.1",
     "bcryptjs": "^3.0.3",
+    "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
-    "express-session": "^1.18.2",
-    "express-validator": "^7.3.1",
     "file-type": "^21.1.1",
     "helmet": "^8.1.0",
-    "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.2",
     "mssql": "^12.1.1",
     "multer": "^2.0.2",
+    "pdfkit": "^0.18.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "start-server-and-test": "^2.1.5",
+    "supertest": "^7.2.2"
   }
 }

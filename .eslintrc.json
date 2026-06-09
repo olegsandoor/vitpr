@@ -1,0 +1,49 @@
+{
+    "env": {
+        "node": true,
+        "browser": true,
+        "es2022": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "script"
+    },
+    "rules": {
+        "no-unused-vars": ["warn", {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+        }],
+        "no-undef": "error",
+        "no-var": "warn",
+        "prefer-const": "warn",
+        "eqeqeq": ["warn", "smart"],
+        "no-console": "off",
+        "no-empty": ["warn", { "allowEmptyCatch": true }],
+        "no-irregular-whitespace": "warn",
+        "no-cond-assign": "error",
+        "no-unreachable": "warn",
+        "no-prototype-builtins": "off"
+    },
+    "overrides": [
+        {
+            "files": ["tests/**/*.js"],
+            "env": { "node": true }
+        },
+        {
+            "files": ["public/**/*.js"],
+            "env": { "browser": true, "node": false },
+            "globals": {
+                "Chart": "readonly",
+                "FullCalendar": "readonly"
+            }
+        }
+    ],
+    "ignorePatterns": [
+        "node_modules/",
+        "public/vendor/",
+        "logs/",
+        "uploads/",
+        ".claude/",
+        "db.bak"
+    ]
+}

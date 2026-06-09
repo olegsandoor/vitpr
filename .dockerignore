@@ -1,0 +1,38 @@
+# Локальные артефакты разработки
+node_modules
+npm-debug.log
+
+# Чувствительное / переменные окружения (Compose передаёт их через env_file)
+.env
+.env.local
+
+# Рантайм-данные (монтируются как volumes)
+uploads
+logs
+
+# Git и worktrees
+.git
+.gitignore
+.claude
+
+# DB backup — нужен только в mssql-контейнере через bind-mount, не в app-image.
+# Compose читает host-path напрямую, .dockerignore влияет только на app build.
+db/backup
+
+# Прочие миграции и cleanup-скрипты — не нужны в app-runtime
+db/*.sql
+
+# Бэкапы и мусор в корне
+db.bak
+*.bak
+*.drawio
+sample-protocol-*.pdf
+jan26.*
+251217.*
+
+# Большие, ненужные внутри контейнера
+HANDOFF.md
+CLAUDE.md
+
+# Cleanup/setup-скрипты — нужны только при разработке, не в runtime
+scripts/clean_comment_tags.js
